@@ -3,6 +3,8 @@ import sys
 import whois
 from datetime import datetime
 import dns.resolver
+import requests
+import socket
 
 parser=argparse.ArgumentParser(
 description="This is python recon tool",
@@ -73,3 +75,14 @@ try:
   
 except:
   pass
+
+#using geolocation module now to extract geolocation information for recon
+try:
+   response = requests.get('https://geolocation-db.com/json/'+socket.gethostbyname(domain)).json() #socket.gethostname(domain) will convert domain into IP address
+   print(f"County Name: {response['country_name']}")
+   print(f"Lalitude: {response['latitude']}")
+   print(f"Longitude: {response['longitude']}")
+   print(f"County Code: {response['country_code']}")
+except:
+   pass
+
