@@ -1,9 +1,11 @@
+import os
 import argparse
 import sys
 import whois
 from datetime import datetime
 import dns.resolver
 import requests
+from dotenv import load_dotenv
 import socket
 
 parser=argparse.ArgumentParser(
@@ -77,6 +79,7 @@ except:
   pass
 
 #using geolocation module now to extract geolocation information for recon
+print("Getting geolocation information:")
 try:
    response = requests.get('https://geolocation-db.com/json/'+socket.gethostbyname(domain)).json() #socket.gethostname(domain) will convert domain into IP address
    print(f"County Name: {response['country_name']}")
@@ -86,3 +89,18 @@ try:
 except:
    pass
 
+#working with shodan recon method
+load_dotenv() #this will read out .env file
+shodan_key = os.getenv("shodan_key")
+
+if shodan: 
+   api=shodan.Shodan(shodan_key)
+   try:
+      results=api.search(shodan)
+      print(f"Results found:{results['total']}")
+      for result in results['matches']:
+         print(f"IP address: {result['ip_syr']}")
+         print(f"IP address: {result['data']}")
+
+   except:
+      pass
